@@ -17,13 +17,13 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.common.template.TemplateEngine;
 
 /**
- * 
+ *
  * @author cafedada <cafedada@vilya.io>
  * @since 2020-03-01 14:41
  */
 public class IndexHandler implements Handler<RoutingContext> {
 
-    private TemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
 
     public IndexHandler(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
@@ -42,15 +42,15 @@ public class IndexHandler implements Handler<RoutingContext> {
         options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create()));
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-        Node document = parser.parse("" + 
-                "```java\r\n" + 
-                "@Override\r\n" + 
-                "public void handle(RoutingContext context) {\r\n" + 
-                "    JsonObject model = new JsonObject();\r\n" + 
-                "    model.put(\"content\", content());\r\n" + 
-                "    Future<Buffer> view = templateEngine.render(model, \"template/index.html\");\r\n" + 
-                "    context.response().putHeader(HttpHeaders.CONTENT_TYPE, \"text/html\").end(view.result());\r\n" + 
-                "}\r\n" + 
+        Node document = parser.parse("" +
+                "```java\r\n" +
+                "@Override\r\n" +
+                "public void handle(RoutingContext context) {\r\n" +
+                "    JsonObject model = new JsonObject();\r\n" +
+                "    model.put(\"content\", content());\r\n" +
+                "    Future<Buffer> view = templateEngine.render(model, \"template/index.html\");\r\n" +
+                "    context.response().putHeader(HttpHeaders.CONTENT_TYPE, \"text/html\").end(view.result());\r\n" +
+                "}\r\n" +
                 "```");
         return renderer.render(document);
     }

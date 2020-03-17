@@ -1,5 +1,6 @@
 package io.vilya.eris;
 
+import io.vilya.eris.handler.AdminHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,7 @@ import io.vilya.eris.handler.DefaultHandler;
 import io.vilya.eris.handler.IndexHandler;
 
 /**
- * 
+ *
  * @author cafedada <cafedada@vilya.io>
  * @since 2020-03-01 14:42
  */
@@ -37,11 +38,7 @@ public class MainVerticle extends AbstractVerticle {
 
         Router router = Router.router(vertx);
 
-        router.routeWithRegex(HttpMethod.GET, "/admin/.*").handler(routingContext -> {
-            JsonObject model = new JsonObject();
-            Future<Buffer> view = templateEngine.render(model, "template/todo.html");
-            routingContext.response().putHeader("content-type", "text/html").end(view.result());
-        });
+        router.routeWithRegex(HttpMethod.GET, "/admin/.*").handler(new AdminHandler(templateEngine));
 
         router.routeWithRegex(HttpMethod.GET, "/t/\\d+\\.html").handler(routingContext -> {
             JsonObject model = new JsonObject();
