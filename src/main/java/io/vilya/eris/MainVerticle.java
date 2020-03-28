@@ -17,6 +17,7 @@ import io.vertx.ext.web.common.template.TemplateEngine;
 import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import io.vilya.eris.handler.DefaultHandler;
 import io.vilya.eris.handler.IndexHandler;
+import io.vilya.eris.handler.tool.IPHandler;
 
 /**
  *
@@ -40,6 +41,8 @@ public class MainVerticle extends AbstractVerticle {
 
         router.routeWithRegex(HttpMethod.GET, "/admin/.*").handler(new AdminHandler(templateEngine));
 
+        router.routeWithRegex(HttpMethod.GET, "/tool/.*").handler(new AdminHandler(templateEngine));
+
         router.routeWithRegex(HttpMethod.GET, "/t/\\d+\\.html").handler(routingContext -> {
             JsonObject model = new JsonObject();
             Future<Buffer> view = templateEngine.render(model, "template/todo.html");
@@ -52,7 +55,7 @@ public class MainVerticle extends AbstractVerticle {
             routingContext.response().putHeader("content-type", "text/html").end(view.result());
         });
 
-        router.route(HttpMethod.GET, "/").handler(new IndexHandler(templateEngine));
+        router.route(HttpMethod.GET, "/").handler(new IPHandler());
         router.routeWithRegex(HttpMethod.GET, ".*").handler(new DefaultHandler());
 
         router.handle(request);
