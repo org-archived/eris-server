@@ -18,6 +18,7 @@ import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import io.vilya.eris.handler.DefaultHandler;
 import io.vilya.eris.handler.IndexHandler;
 import io.vilya.eris.handler.tool.IPHandler;
+import io.vilya.eris.router.tool.ToolRouter;
 
 /**
  *
@@ -55,6 +56,9 @@ public class MainVerticle extends AbstractVerticle {
             routingContext.response().putHeader("content-type", "text/html").end(view.result());
         });
 
+        // 工具
+        router.mountSubRouter("/h", ToolRouter.createRouter(vertx, templateEngine));
+        
         router.route(HttpMethod.GET, "/").handler(new IPHandler());
         router.routeWithRegex(HttpMethod.GET, ".*").handler(new DefaultHandler());
 
