@@ -11,6 +11,8 @@ import com.google.common.base.Strings;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
+import io.vertx.core.http.HttpClientOptions;
+import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -26,15 +28,14 @@ public class BV2AVRouter {
 
     private static final Logger log = LoggerFactory.getLogger(BV2AVRouter.class);
 
-    private static final String BILIBILI_API = "https://api.bilibili.com/x/web-interface/view?bvid=BV1qK41177vS";
+    private static final String BILIBILI_API = "https://api.bilibili.com/x/web-interface/view";
 
     private BV2AVRouter() {
     }
 
     public static Router createRouter(Vertx vertx, TemplateEngine templateEngine) {
-        // TODO 1、sington
-        // TODO 2、java.net.http
-        HttpClient httpClient = vertx.createHttpClient();
+        HttpClientOptions httpClientOptions = new HttpClientOptions();
+        HttpClient httpClient = vertx.createHttpClient(httpClientOptions);
 
         Router router = Router.router(vertx);
         router.post("/api").handler(context -> {
@@ -53,20 +54,28 @@ public class BV2AVRouter {
                 url = BILIBILI_API + "?aid=" + av;
             }
 
-            httpClient.get(url).onSuccess(response -> {
+            log.info("url={}", url);
+
+            HttpClientRequest request = httpClient.getAbs(url);
+            request.onSuccess(response -> {
                 if (response.statusCode() != 200) {
                     log.error("statusCode={}", response.statusCode());
                     context.json(Result.failed("处理请求失败"));
                 } else {
-                    JsonObject body = Json.decodeValue(response.body().result(), JsonObject.class);
-                    JsonObject data = body.getJsonObject("data");
-                    JsonObject ret = new JsonObject();
-                    ret.put("av", data.getLong("aid"));
-                    ret.put("bv", data.getString("bvid"));
-                    context.json(Result.succeeded(ret));
+                    response.body().onSuccess(buffer -> {
+                        JsonObject body = (JsonObject) Json.decodeValue(buffer);
+                        JsonObject data = body.getJsonObject("data");
+                        JsonObject ret = new JsonObject();
+                        ret.put("av", data.getLong("aid"));
+                        ret.put("bv", data.getString("bvid"));
+                        context.json(Result.succeeded(ret));
+                    });
                 }
-            }).onFailure(exception -> context.json(Result.failed(exception.getMessage())));
-            context.end();
+            }).onFailure(exception -> {
+                log.error("", exception);
+                context.json(Result.failed(exception.getMessage()));
+            });
+            request.end();
         });
 
         router.get().handler(context -> {
