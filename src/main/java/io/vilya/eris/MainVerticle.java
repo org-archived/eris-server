@@ -14,6 +14,7 @@ import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.common.template.TemplateEngine;
+import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import io.vilya.eris.handler.DefaultHandler;
 import io.vilya.eris.handler.IndexHandler;
@@ -36,9 +37,12 @@ public class MainVerticle extends AbstractVerticle {
     }
 
     private void handle(HttpServerRequest request) {
+        // TODO
         TemplateEngine templateEngine = ThymeleafTemplateEngine.create(vertx);
 
         Router router = Router.router(vertx);
+        
+        router.route("/static/*").handler(StaticHandler.create("META-INF/resources/webjars"));
 
         router.routeWithRegex(HttpMethod.GET, "/admin/.*").handler(new AdminHandler(templateEngine));
 

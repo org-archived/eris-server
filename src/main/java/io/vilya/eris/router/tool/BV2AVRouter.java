@@ -79,8 +79,7 @@ public class BV2AVRouter {
         });
 
         router.get().handler(context -> {
-            System.out.println(context.normalisedPath());
-            context.response().putHeader("content-type", "text/html").end("213");
+            templateEngine.render(new JsonObject(), "h/bv2av.html").onSuccess(context::end);
         });
 
         router.errorHandler(500, context -> log.error("", context.failure()));
