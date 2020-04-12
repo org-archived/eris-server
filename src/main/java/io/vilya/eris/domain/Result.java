@@ -48,7 +48,7 @@ public class Result {
 
     public static Result failed(String message) {
         Result result = new Result();
-        result.code = 0;
+        result.code = 1000;
         result.message = message;
         return result;
     }

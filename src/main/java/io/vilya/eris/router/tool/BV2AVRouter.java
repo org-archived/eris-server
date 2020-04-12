@@ -39,9 +39,13 @@ public class BV2AVRouter {
 
         Router router = Router.router(vertx);
         router.post("/api").handler(context -> {
-            MultiMap queryParams = context.queryParams();
-            String bv = queryParams.get("bv");
-            String av = queryParams.get("av");
+            JsonObject requestBody = context.getBodyAsJson();
+            if (requestBody == null) {
+                context.json(Result.failed("缺少参数"));
+            }
+            
+            String bv = requestBody.getString("bv");
+            String av = requestBody.getString("av");
 
             if (Strings.isNullOrEmpty(bv) && Strings.isNullOrEmpty(av)) {
                 context.json(Result.failed("缺少参数"));

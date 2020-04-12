@@ -5,21 +5,25 @@
 <title>BV to AV</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+<script type="text/javascript" src="../js/bv2av.js"></script>
 </head>
 <body>
     <div class="container">
+        <div class="alert alert-primary" role="alert">
+            A simple primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+        </div>
         <div class="justify-content-md-center">
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">BV</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea class="form-control" id="bv" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <i class="fas fa-2x fa-chevron-up"></i>
-                <i class="fas fa-2x fa-chevron-down"></i>
+                <i class="fas fa-2x fa-chevron-down" style="cursor: pointer;" onclick="bv2av()"></i>
+                <i class="fas fa-2x fa-chevron-up" style="cursor: pointer;" onclick="av2bv()"></i>
             </div>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">AV</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea class="form-control" id="av" rows="3"></textarea>
             </div>
         </div>
     </div>
