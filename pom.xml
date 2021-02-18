@@ -17,7 +17,7 @@
 
         <vertx.version>4.0.0-milestone4</vertx.version>
         <junit-jupiter.version>5.4.0</junit-jupiter.version>
-        <jackson.version>2.10.3</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
 
 
         <main.verticle>io.vilya.eris.MainVerticle</main.verticle>
